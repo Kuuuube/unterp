@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+using System;
+using System.Numerics;
 using OpenTabletDriver.Plugin.Attributes;
 using OpenTabletDriver.Plugin.Output;
 using OpenTabletDriver.Plugin.Tablet;
@@ -6,14 +7,14 @@ using OpenTabletDriver.Plugin.Timing;
 
 namespace BezierInterpolator
 {
-    [PluginName("BezierInterpolator")]
-    public class BezierInterp : AsyncPositionedPipelineElement<IDeviceReport>
+    [PluginName("Unterp BezierInterpolator")]
+    public class BezierInterp : IPositionedPipelineElement<IDeviceReport>
     {
         public BezierInterp() : base()
         {
         }
 
-        public override PipelinePosition Position => PipelinePosition.PostTransform;
+        public PipelinePosition Position => PipelinePosition.PostTransform;
 
         [Property("Pre-interpolation smoothing factor"), DefaultPropertyValue(1.0f), ToolTip
         (
@@ -40,10 +41,11 @@ namespace BezierInterpolator
             set { tiltWeight = System.Math.Clamp(value, 0.0f, 1.0f); }
         }
         private float tiltWeight;
+        public event Action<IDeviceReport> Emit;
 
-        protected override void UpdateState()
+        protected void UpdateState(IDeviceReport State)
         {
-            float alpha = (float)(reportStopwatch.Elapsed.TotalSeconds * Frequency / reportMsAvg);
+            float alpha = (float)(reportStopwatch.Elapsed.TotalSeconds);
 
             if (State is ITiltReport tiltReport)
             {
@@ -51,19 +53,18 @@ namespace BezierInterpolator
                 State = tiltReport;
             }
 
-            if (State is ITabletReport report && PenIsInRange())
+            if (State is ITabletReport report)
             {
                 var lerp1 = Vector3.Lerp(previousTarget, controlPoint, alpha);
                 var lerp2 = Vector3.Lerp(controlPoint, target, alpha);
                 var res = Vector3.Lerp(lerp1, lerp2, alpha);
                 report.Position = new Vector2(res.X, res.Y);
-                report.Pressure = report.Pressure == 0 ? 0 : (uint)(res.Z);
                 State = report;
-                OnEmit();
+                Emit?.Invoke(State);
             }
         }
 
-        protected override void ConsumeState()
+        public void Consume(IDeviceReport State)
         {
             if (State is ITiltReport tiltReport)
             {
@@ -86,8 +87,9 @@ namespace BezierInterpolator
 
                 previousTarget = target;
                 target = Vector3.Lerp(controlPoint, controlPointNext, 0.5f);
+                UpdateState(State);
             }
-            else OnEmit();
+            else Emit?.Invoke(State);
         }
 
         private Vector2 emaTarget, tiltTraget, previousTiltTraget;

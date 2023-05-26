@@ -6,8 +6,8 @@ using OpenTabletDriver.Plugin.Tablet;
 
 namespace TabletDriverFilters.Devocub
 {
-    [PluginName("Devocub Antichatter")]
-    public class Antichatter : MillimeterAsyncPositionedPipelineElement
+    [PluginName("Unterp Devocub Antichatter")]
+    public class Antichatter : MillimeterPositionedPipelineElement
     {
         private const string LATENCY_TOOLTIP =
               "Smoothing latency\n"
@@ -108,14 +108,16 @@ namespace TabletDriverFilters.Devocub
 
         private const float THRESHOLD = 0.9f;
         private bool isReady;
-        private float timerInterval => 1000 / Frequency;
+        private float timerInterval = 1;
         private float latency = 2.0f;
         private float weight;
         private Vector2 position;
         private uint pressure;
         private Vector2 prevTargetPos, targetPos, calcTarget;
 
-        protected override void ConsumeState()
+        public override event Action<IDeviceReport> Emit;
+
+        public override void Consume(IDeviceReport State)
         {
             if (State is ITabletReport report)
             {
@@ -144,22 +146,23 @@ namespace TabletDriverFilters.Devocub
                 }
                 else
                     calcTarget = targetPos;
+                UpdateState(State);
             }
             else
             {
-                OnEmit();
+                Emit?.Invoke(State);
             }
         }
 
-        protected override void UpdateState()
+        protected void UpdateState(IDeviceReport State)
         {
-            if (State is ITabletReport report && PenIsInRange())
+            if (State is ITabletReport report)
             {
                 report.Position = Filter(calcTarget) / MillimeterScale;
                 report.Pressure = this.pressure;
                 State = report;
 
-                OnEmit();
+                Emit?.Invoke(State);
             }
         }
 

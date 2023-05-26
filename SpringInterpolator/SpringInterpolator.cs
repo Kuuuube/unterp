@@ -1,12 +1,13 @@
-﻿using System.Numerics;
-using OpenTabletDriver.Plugin.Attributes;
+using System;
+using System.Numerics;
 using OpenTabletDriver.Plugin.Output;
+using OpenTabletDriver.Plugin.Attributes;
 using OpenTabletDriver.Plugin.Tablet;
 
 namespace SpringInterpolator
 {
-    [PluginName("SpringInterpolator")]
-    public class SpringInterpolator : AsyncPositionedPipelineElement<IDeviceReport>
+    [PluginName("Unterp SpringInterpolator")]
+    public class SpringInterpolator : IPositionedPipelineElement<IDeviceReport>
     {
         // future idea: make the z springy (pressure)
         private readonly SpringSettings2D settings;
@@ -48,7 +49,9 @@ namespace SpringInterpolator
             set => settings.StepSize = value;
         }
 
-        protected override void UpdateState()
+        public event Action<IDeviceReport> Emit;
+
+        protected void UpdateState(IDeviceReport State)
         {
             if (State is ITabletReport report)
             {
@@ -57,19 +60,17 @@ namespace SpringInterpolator
                 State = report;
             }
 
-            if (PenIsInRange())
-            {
-                OnEmit();
-            }
+            Emit?.Invoke(State);
         }
 
-        protected override void ConsumeState()
+        public void Consume(IDeviceReport State)
         {
             if (State is not ITabletReport report) return;
             spring.Target = new Vector2(report.Position.X, report.Position.Y);
             spring.Update();
             pressure = report.Pressure;
+            UpdateState(State);
         }
-        public override PipelinePosition Position => PipelinePosition.PreTransform;
+        public PipelinePosition Position => PipelinePosition.PreTransform;
     }
 }

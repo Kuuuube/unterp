@@ -6,8 +6,8 @@ using OpenTabletDriver.Plugin.Tablet;
 
 namespace TabletDriverFilters.Hawku
 {
-    [PluginName("Hawku Smoothing Filter")]
-    public class Smoothing : MillimeterAsyncPositionedPipelineElement
+    [PluginName("Unterp Hawku Smoothing Filter")]
+    public class Smoothing : MillimeterPositionedPipelineElement
     {
         public override PipelinePosition Position => PipelinePosition.PreTransform;
 
@@ -25,7 +25,7 @@ namespace TabletDriverFilters.Hawku
         public float Latency { set; get; }
 
         private const float THRESHOLD = 0.63f;
-        private float timerInterval => 1000 / Frequency;
+        private float timerInterval = 1;
 
         private float weight;
         private DateTime? lastFilterTime;
@@ -33,24 +33,29 @@ namespace TabletDriverFilters.Hawku
         private Vector3 targetPos;
         private Vector3 lastPos;
 
-        protected override void ConsumeState()
+        public override event Action<IDeviceReport> Emit;
+
+        public override void Consume(IDeviceReport State)
         {
             if (State is ITabletReport report)
+            {
                 this.targetPos = new Vector3(report.Position, report.Pressure) * mmScale;
+                UpdateState(State);
+            }
             else
-                OnEmit();
+                Emit?.Invoke(State);
         }
 
-        protected override void UpdateState()
+        protected void UpdateState(IDeviceReport State)
         {
-            if (State is ITabletReport report && PenIsInRange())
+            if (State is ITabletReport report)
             {
                 var newPoint = Filter(this.targetPos) / mmScale;
                 report.Position = new Vector2(newPoint.X, newPoint.Y);
                 report.Pressure = (uint)newPoint.Z;
                 State = report;
 
-                OnEmit();
+                Emit?.Invoke(State);
             }
         }
 
@@ -58,7 +63,7 @@ namespace TabletDriverFilters.Hawku
         {
             var timeDelta = DateTime.Now - this.lastFilterTime;
             // If a time difference hasn't been established or it has been 100 milliseconds since the last filter
-            if (timeDelta == null || timeDelta.Value.TotalMilliseconds > 100)
+            if (timeDelta == null || timeDelta.Value.TotalMilliseconds > 100 || this.lastPos == null)
             {
                 this.lastPos = point;
                 this.lastFilterTime = DateTime.Now;
