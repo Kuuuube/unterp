@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "springinterpolator", "SpringInterpolator\SpringInterpolator.csproj", "{C3A61F93-EC7D-4E9A-BA65-7743900A08AE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnterpSpringInterpolator", "UnterpSpringInterpolator\UnterpSpringInterpolator.csproj", "{C3A61F93-EC7D-4E9A-BA65-7743900A08AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hawkufilters", "HawkuFilters\HawkuFilters.csproj", "{38705C77-0D89-410B-A60C-5D9D3F0D7748}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnterpHawkuFilters", "UnterpHawkuFilters\UnterpHawkuFilters.csproj", "{38705C77-0D89-410B-A60C-5D9D3F0D7748}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "devocubfilters", "DevocubFilters\DevocubFilters.csproj", "{563D80C0-C375-43A6-B1C6-AF647CE64C6F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnterpDevocubFilters", "UnterpDevocubFilters\UnterpDevocubFilters.csproj", "{563D80C0-C375-43A6-B1C6-AF647CE64C6F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BezierInterpolator", "BezierInterpolator\BezierInterpolator.csproj", "{FCF1B81A-62F1-486D-8B8A-1A5569FF6E41}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnterpBezierInterpolator", "UnterpBezierInterpolator\UnterpBezierInterpolator.csproj", "{FCF1B81A-62F1-486D-8B8A-1A5569FF6E41}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
