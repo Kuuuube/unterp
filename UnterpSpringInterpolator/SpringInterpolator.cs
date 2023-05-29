@@ -4,7 +4,7 @@ using OpenTabletDriver.Plugin.Output;
 using OpenTabletDriver.Plugin.Attributes;
 using OpenTabletDriver.Plugin.Tablet;
 
-namespace SpringInterpolator
+namespace UnterpSpringInterpolator
 {
     [PluginName("Unterp SpringInterpolator")]
     public class SpringInterpolator : IPositionedPipelineElement<IDeviceReport>

@@ -4,7 +4,7 @@ using OpenTabletDriver.Plugin.Attributes;
 using OpenTabletDriver.Plugin.Output;
 using OpenTabletDriver.Plugin.Tablet;
 
-namespace TabletDriverFilters
+namespace UnterpTabletDriverFilters
 {
     public abstract class MillimeterPositionedPipelineElement : IPositionedPipelineElement<IDeviceReport>
     {

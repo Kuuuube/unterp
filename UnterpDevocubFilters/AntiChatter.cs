@@ -4,7 +4,7 @@ using OpenTabletDriver.Plugin.Attributes;
 using OpenTabletDriver.Plugin.Output;
 using OpenTabletDriver.Plugin.Tablet;
 
-namespace TabletDriverFilters.Devocub
+namespace UnterpTabletDriverFilters.Devocub
 {
     [PluginName("Unterp Devocub Antichatter")]
     public class Antichatter : MillimeterPositionedPipelineElement

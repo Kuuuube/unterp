@@ -3,7 +3,7 @@ using System.Numerics;
 
 // Code written by Kyle "KuNet" Nguyen
 
-namespace SpringInterpolator
+namespace UnterpSpringInterpolator
 {
     public class Spring2D
     {

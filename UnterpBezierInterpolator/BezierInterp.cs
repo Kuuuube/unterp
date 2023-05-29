@@ -5,7 +5,7 @@ using OpenTabletDriver.Plugin.Output;
 using OpenTabletDriver.Plugin.Tablet;
 using OpenTabletDriver.Plugin.Timing;
 
-namespace BezierInterpolator
+namespace UnterpBezierInterpolator
 {
     [PluginName("Unterp BezierInterpolator")]
     public class BezierInterp : IPositionedPipelineElement<IDeviceReport>

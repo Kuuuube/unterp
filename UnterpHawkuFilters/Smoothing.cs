@@ -4,7 +4,7 @@ using OpenTabletDriver.Plugin.Attributes;
 using OpenTabletDriver.Plugin.Output;
 using OpenTabletDriver.Plugin.Tablet;
 
-namespace TabletDriverFilters.Hawku
+namespace UnterpTabletDriverFilters.Hawku
 {
     [PluginName("Unterp Hawku Smoothing Filter")]
     public class Smoothing : MillimeterPositionedPipelineElement
